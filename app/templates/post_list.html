@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row pt-5 content">
+        <div class="col-8 posts">
+            {% for post in posts %}
+                <div class="short-post">
+                    <div class="short-post-header">
+                        <h2 class="post-title">
+                            <a href="{{ url_for('get_post', post_id=post.id) }}">{{ post.title }}</a>
+                        </h2>
+                    </div>
+                    <p class="text-muted">
+                        <small>
+                            <a href="{{ url_for('get_category_posts', category_id=post.category.id) }}">
+                                {{ post.category.title }}
+                            </a>
+                        </small>
+                    </p>
+
+                    <div class="post-short">
+                        {{ post.text }}
+                    </div>
+                    <div class="short-post-footer">
+                        <a href="{{ url_for('get_post', post_id=post.id) }}" type="button"
+                           class="btn btn-outline-primary">Читать далее</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="col-4 sidebar">
+            {% include 'include/sidebar.html' %}
+        </div>
+    </div>
+{% endblock %}

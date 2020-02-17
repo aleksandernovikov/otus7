@@ -1,0 +1,50 @@
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0;
+    margin-bottom: 60px;
+}
+
+.posts {
+    padding-bottom: 1.5em;
+}
+
+.short-post {
+    padding-bottom: 1em;
+    padding-top: 1em;
+    border-bottom: .05rem solid #e5e5e5;
+}
+
+.short-post-footer {
+    padding-top: 1em;
+    text-align: right;
+}
+
+.post-content img {
+    margin: .5em;
+}
+
+.categories li {
+    padding-bottom: .5em;
+}
+
+
+footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    border-top: .05rem solid #e5e5e5;
+    color: gray;
+    padding-top: 1.5em;
+}
+
+.form-login, .form-signup {
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}

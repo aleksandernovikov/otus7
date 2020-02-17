@@ -1,8 +1,9 @@
-from flask import render_template, request
-from flask_login import login_required, logout_user
+from flask import render_template, request, redirect, url_for
+from flask_login import login_required, logout_user, login_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import app, login_manager, db
-from .models import User
+from .models import User, Post, Category
 
 
 @app.route('/')
@@ -10,35 +11,90 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/registration/', methods=['GET'])
-def registration_form():
-    return render_template('registration.html')
+@app.route('/signup/', methods=['GET'])
+def registration():
+    return render_template('signup_form.html')
 
 
-@app.route('/registration/', methods=['POST'])
-def registration_work():
-    if request.form.get('password1') == request.form.get('password2'):
-        login = request.form.get('login')
+@app.route('/signup/', methods=['POST'])
+def registration_process():
+    """
+    User registration
+    """
+    check = all([
+        request.form.get('login'), request.form.get('password1'),
+        request.form.get('password1') == request.form.get('password2')
+    ])
+    if check:
+        pass_hash = generate_password_hash(request.form.get('password1'))
         db.session.add(
-            User(username=login, password=request.form.get('password1'))
+            User(
+                username=request.form.get('login'),
+                password=pass_hash
+            )
         )
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            return e
 
-    return 'some work'
+    return redirect(url_for('home'))
 
 
-@app.route('/login/')
+@app.route('/login/', methods=['GET'])
 def login():
-    return "you are logged in!"
+    return render_template('login_form.html')
+
+
+@app.route('/login/', methods=['POST'])
+def login_process():
+    username, password = request.form.get('login'), request.form.get('password')
+
+    if username and password:
+        user = User.query.filter_by(username=username).first()
+
+        if check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('home'))
+    else:
+        return '<h1>Wrong username or password</h1>'
 
 
 @app.route('/logout/')
 @login_required
 def logout():
     logout_user()
-    return "you are logged out"
+    return redirect(url_for('home'))
 
 
 @login_manager.user_loader
-def load_user(user_id):
-    return User(user_id)
+def load_user(user_id: int):
+    return User.query.get(int(user_id))
+
+
+@app.route('/posts/')
+def post_list():
+    posts = Post.query.all()
+    return render_template('post_list.html', posts=posts)
+
+
+@app.route('/post/<int:post_id>')
+def get_post(post_id):
+    post = Post.query.filter_by(id=post_id).first()
+    return render_template('post.html', post=post)
+
+
+@app.route('/category/<int:category_id>')
+def get_category_posts(category_id):
+    posts = Post.query.filter_by(category_id=category_id).all()
+    return render_template('post_list.html', posts=posts)
+
+
+@app.context_processor
+def context_processor():
+    def all_categories():
+        return Category.query.all()
+
+    return {
+        'all_categories': all_categories()
+    }

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="row pt-5">
+        <div class="col-8 post">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{{ url_for('home') }}">Главная</a></li>
+                    <li class="breadcrumb-item"><a href="{{ url_for('post_list') }}">Блог</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+                </ol>
+            </nav>
+            <div class="short-post-header">
+                <h2 class="post-title">
+                    {{ post.title }}
+                </h2>
+            </div>
+
+            <div class="post-content">
+                <p>
+                    {{ post.text }}
+                </p>
+            </div>
+        </div>
+
+        <div class="col-4 sidebar">
+            {% include 'include/sidebar.html' %}
+        </div>
+
+    </div>
+{% endblock %}
