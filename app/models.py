@@ -1,4 +1,8 @@
-from app import db, login_manager
+import datetime
+
+from sqlalchemy import DateTime
+
+from app import db
 from flask_login import UserMixin
 
 
@@ -36,7 +40,9 @@ class Post(db.Model):
     Посты
     """
     __tablename__ = 'posts'
+
     id = db.Column(db.Integer, primary_key=True)
+    created = db.Column(DateTime, default=datetime.datetime.utcnow)
 
     author_id = db.Column(db.Integer, db.ForeignKey(User.id))
     category_id = db.Column(db.Integer, db.ForeignKey(Category.id))

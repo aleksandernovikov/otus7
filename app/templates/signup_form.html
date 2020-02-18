@@ -1,44 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <form method="POST" action="/signup/" class="form-signup">
+    <form method="POST" class="form-signup">
         <h1>Регистрация</h1>
         <div>
             <label for="login">Имя пользователя</label>
             <input type="text" id="login" name="login" class="form-control">
         </div>
-
         <div>
-            <label for="password">Пароль</label>
-            <input type="password" id="password" name="password" class="form-control">
+            <label for="password1">Пароль</label>
+            <input type="password" id="password1" name="password1" class="form-control">
         </div>
-
-
         <div>
             <label for="password2">Подтверждение пароля</label>
             <input type="password" id="password2" name="password2" class="form-control">
         </div>
         <br>
-
         <input type="submit" class="btn btn-lg btn-outline-primary btn-block" value="Регистрация">
     </form>
 {% endblock %}
-
-{#{% extends 'base.html' %}#}
-{##}
-{#{% block content %}#}
-{#    <form method="POST" action="/login/" class="form-login">#}
-{#        <h1>Вход</h1>#}
-{#        <div>#}
-{#            <label for="login">Имя пользователя</label>#}
-{#            <input type="text" id="login" name="login" class="form-control">#}
-{#        </div>#}
-{##}
-{#        <div>#}
-{#            <label for="password">Пароль</label>#}
-{#            <input type="password" id="password" name="password" class="form-control">#}
-{#        </div>#}
-{#        <br>#}
-{#        <input type="submit" value="Вход" class="btn btn-lg btn-outline-primary btn-block">#}
-{#    </form>#}
-{#{% endblock %}#}

@@ -10,46 +10,26 @@
 
 
     <div class="row mb-2">
+        {% for post in posts %}
+            <div class="col-md-6">
+                <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
 
-        <div class="col-md-6">
-            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2">{{ post.category.title|capitalize }}</strong>
 
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2">Backend</strong>
-                    <h3 class="mb-0">Lorem ipsum dolor sit amet.</h3>
-                    <div class="mb-1 text-muted">28 Января 2020</div>
-                    <p class="card-text mb-auto">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus
-                        deserunt</p>
-                    <a href="{{ url_for('post_list') }}" class="stretched-link">Читать далее</a>
-                </div>
+                        <h3 class="mb-0">{{ post.title }}</h3>
 
-                <div class="col-auto d-none d-lg-block">
-                    <img src="//via.placeholder.com/200x250" alt="first image placeholder" class="img-fluid">
+                        <div class="mb-1 text-muted">{{ post.created.strftime('%Y-%m-%d') }}</div>
+
+                        <p class="card-text mb-auto">{{ post.text|truncate(100) }}</p>
+                        <a href="{{ url_for('get_post', post_id=post.id) }}" class="stretched-link">Читать далее</a>
+                    </div>
+
+                    <div class="col-auto d-none d-lg-block">
+                        <img src="//via.placeholder.com/200x250" alt="first image placeholder" class="img-fluid">
+                    </div>
                 </div>
             </div>
-        </div>
-
-
-        <div class="col-md-6">
-            <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-
-                <div class="col p-4 d-flex flex-column position-static">
-                    <strong class="d-inline-block mb-2">Frontend</strong>
-                    <h3 class="mb-0">Lorem ipsum dolor sit amet, consectetur.</h3>
-                    <div class="mb-1 text-muted">29 Января 2020</div>
-                    <p class="mb-auto">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium,
-                        numquam?</p>
-                    <a href="post.html" class="stretched-link">Читать далее</a>
-                </div>
-
-
-                <div class="col-auto d-none d-lg-block">
-                    <img src="//via.placeholder.com/200x250" alt="second image placeholder" class="img-fluid">
-                </div>
-
-            </div>
-        </div>
-
-
+        {% endfor %}
     </div>
 {% endblock %}

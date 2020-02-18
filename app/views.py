@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, logout_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -8,7 +8,8 @@ from .models import User, Post, Category
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    posts = Post.query.limit(2).all()
+    return render_template('index.html', posts=posts)
 
 
 @app.route('/signup/', methods=['GET'])
@@ -35,10 +36,13 @@ def registration_process():
         )
         try:
             db.session.commit()
-        except Exception as e:
-            return e
+            flash('Успешная регистрация, можно войти, используя свои данные')
+            return redirect(url_for('login'))
+        except Exception:
+            pass
 
-    return redirect(url_for('home'))
+    flash('Неверное имя пользователя или пароль')
+    return redirect(url_for('registration'))
 
 
 @app.route('/login/', methods=['GET'])
@@ -55,9 +59,11 @@ def login_process():
 
         if check_password_hash(user.password, password):
             login_user(user)
+            flash(f'Добро пожаловать {username}')
             return redirect(url_for('home'))
-    else:
-        return '<h1>Wrong username or password</h1>'
+
+        flash('Неверное имя пользователя или пароль')
+        return redirect(url_for('login'))
 
 
 @app.route('/logout/')
@@ -95,6 +101,10 @@ def context_processor():
     def all_categories():
         return Category.query.all()
 
+    def last_posts():
+        return Post.query.order_by(Post.created.desc()).limit(3).all()
+
     return {
-        'all_categories': all_categories()
+        'all_categories': all_categories(),
+        'last_posts': last_posts()
     }
