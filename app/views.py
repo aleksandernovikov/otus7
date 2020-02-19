@@ -1,9 +1,13 @@
+import logging
+
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, logout_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import app, login_manager, db
 from .models import User, Post, Category
+
+logger = logging.getLogger(__name__)
 
 
 @app.route('/')
@@ -22,9 +26,10 @@ def registration_process():
     """
     User registration
     """
+    form = request.form
     check = all([
-        request.form.get('login'), request.form.get('password1'),
-        request.form.get('password1') == request.form.get('password2')
+        form.get('login'), form.get('password1'),
+        form.get('password1') == form.get('password2')
     ])
     if check:
         pass_hash = generate_password_hash(request.form.get('password1'))
@@ -38,8 +43,8 @@ def registration_process():
             db.session.commit()
             flash('Успешная регистрация, можно войти, используя свои данные')
             return redirect(url_for('login'))
-        except Exception:
-            pass
+        except Exception as e:
+            logger.exception(e)
 
     flash('Неверное имя пользователя или пароль')
     return redirect(url_for('registration'))
@@ -64,6 +69,9 @@ def login_process():
 
         flash('Неверное имя пользователя или пароль')
         return redirect(url_for('login'))
+
+    flash('Для авторизации необходимо указать имя пользователя и пароль')
+    return redirect(url_for('login'))
 
 
 @app.route('/logout/')
@@ -94,6 +102,11 @@ def get_post(post_id):
 def get_category_posts(category_id):
     posts = Post.query.filter_by(category_id=category_id).all()
     return render_template('post_list.html', posts=posts)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 @app.context_processor
